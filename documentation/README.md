@@ -11,32 +11,37 @@ Before starting the deployment process, make sure you have the following:
 3. A registered domain name with DNS configured to point to your Linode server's IP address.
 
 ### Step 1: Setting up linode server, secure access and firewall considerations
-1. set up linode virtual machine as your requirements
+1. Set up linode virtual machine as your requirements
 
-2. update and upgrade to the latest version
+2. Update and upgrade to the latest version
 
 ```apt update -y && apt upgrade -y```
 
-3. create a user and add it to the sudo group
+3. Create an user and add it to the sudo group
 
-```adduser <user name>```
+```
+	adduser <user name>
 
-```usermod -aG sudo <user name>```
+```
 
-4. set up hostname
+```
+	usermod -aG sudo <user name>
 
-```hostnamectl set-hostname <hostname>```
+```
 
-edit /etc/hosts file:
+4. Set up hostname
+
+```
+	hostnamectl set-hostname <hostname>
+
+```
+
+Edit /etc/hosts file:
 
 ```
 # /etc/hosts
 127.0.0.1       localhost
-194.195.252.113 <hostname>
-# The following lines are desirable for IPv6 capable hosts
-::1             localhost ip6-localhost ip6-loopback
-ff02::1         ip6-allnodes
-ff02::2         ip6-allrouters
+<IP of your server>	 <hostname>  <---  Add this line
 ```
 
 	4. reboot
