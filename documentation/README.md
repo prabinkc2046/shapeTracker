@@ -7,31 +7,36 @@ This guide will walk you through the steps to deploy the ShapeTracker applicatio
 Before starting the deployment process, make sure you have the following:
 
 1. A Linode server with Ubuntu installed and SSH access configured.
-	- set up linode virtual machine
-	- create a new user and make it a member of sudo group
+2. Docker and Docker Compose installed on your Linode server.
+3. A registered domain name with DNS configured to point to your Linode server's IP address.
+
+### Step 1: Setting up linode server, secure access and firewall considerations
+	1. set up linode virtual machine
+
+	2. create a new user and make it a member of sudo group
 ```
 		adduser prabin
 		usermod -aG sudo prabin
 ```
 
-	- set up hostname
+	3. set up hostname
 ```
 		hostnamectl set-hostname shapetracker
 		add shapetracker to /etc/hosts 
 ```
 
-	- reboot
+	4. reboot
 ```
 		sudo reboot
 ```
 
-	- login as new user and update the server
+	5. login as new user and update the server
 ```
 		ssh prabin@server_ip
 		sudo apt update -y && sudo apt upgrade -y
 ```
 
-	- create a ssh-key on the local machine or use existing one and transfer it to the remote server
+	6. create a ssh-key on the local machine or use existing one and transfer it to the remote server
 ```
 		mkdir .ssh @remote server
 		scp path_to_ssh_public_key prabin@remote_server:path_to_.ssh_directory
@@ -39,37 +44,33 @@ Before starting the deployment process, make sure you have the following:
 		sudo chmod 600 .ssh/*
 ```
 
-	- login with ssh key
+	7. login with ssh key
 ```
 		ssh prabin@serverIP
 ```
 
-	- disable root login and password login
+	8. disable root login and password login
 
-	- install ufw firewall and set up following rules
+	9. install ufw firewall and set up following rules
 ```
 		sudo apt install ufw
 		sudo ufw default allow outgoing
 		sudo ufw default deny incoming
 		sudo ufw allow 5000
 		sudo ufw allow ssh
-		sudo ufw reload
 		sudo ufw allow 80/tcp
 		sudo ufw allow 443/tcp
+		suod ufw reload
 ```
 
-2. Docker and Docker Compose installed on your Linode server.
-3. A registered domain name with DNS configured to point to your Linode server's IP address.
-
-### Step 1: Clone the Repository
+### Step 2: Clone the Repository
 
 	Clone the ShapeTracker repository to your Linode server using Git.
-
 ```
 	git clone <https://github.com/prabinkc2046/ShapeTrack.git>
 ```
 
-### Step 2: Build and Start the Containers
+### Step 3: Build and Start the Containers
 
 	Use Docker Compose to build and start the application and database containers.
 
@@ -79,7 +80,7 @@ Before starting the deployment process, make sure you have the following:
 	
 	This command will create two containers - one for the ShapeTracker application and another for the MySQL database.
 
-### Step 3: Set Up Nginx as Reverse Proxy
+### Step 4: Set Up Nginx as Reverse Proxy
 
 	Install Nginx on your Linode server.
 
@@ -120,7 +121,7 @@ Replace your_domain_or_server_ip with your domain name or server IP address. in 
 	sudo systemctl restart nginx
 ```
 
-### Step 5: Obtain SSL/TLS Certificate
+### Step 6: Obtain SSL/TLS Certificate
 
 	Install Certbot on your Linode server.
 
@@ -136,11 +137,11 @@ Replace your_domain_or_server_ip with your domain name or server IP address. in 
 	
 	Follow the on-screen instructions to complete the certificate installation.
 
-### Step 6: Update DNS Records
+### Step 7: Update DNS Records
 
 	Update your DNS records to point to your Linode server's IP address. Add an A record for shapetracker.your_domain_or_server_ip to your domain's DNS settings.
 
-### Step 7: Access Your Application
+### Step 8: Access Your Application
 
 	Once the DNS changes have propagated, you can access your ShapeTrack application at http://shapetracker.your_domain_or_server_ip. The application will automatically redirect to HTTPS (https://shapetracker.your_domain_or_server_ip) due to the Let's Encrypt SSL/TLS certificate.
 
