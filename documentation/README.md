@@ -7,6 +7,57 @@ This guide will walk you through the steps to deploy the ShapeTracker applicatio
 Before starting the deployment process, make sure you have the following:
 
 1. A Linode server with Ubuntu installed and SSH access configured.
+	- set up linode virtual machine
+	- create a new user and make it a member of sudo group
+```
+		adduser prabin
+		usermod -aG sudo prabin
+```
+
+	- set up hostname
+```
+		hostnamectl set-hostname shapetracker
+		add shapetracker to /etc/hosts 
+```
+
+	- reboot
+```
+		sudo reboot
+```
+
+	- login as new user and update the server
+```
+		ssh prabin@server_ip
+		sudo apt update -y && sudo apt upgrade -y
+```
+
+	- create a ssh-key on the local machine or use existing one and transfer it to the remote server
+```
+		mkdir .ssh @remote server
+		scp path_to_ssh_public_key prabin@remote_server:path_to_.ssh_directory
+		sudo chmod 700 .ssh/
+		sudo chmod 600 .ssh/*
+```
+
+	- login with ssh key
+```
+		ssh prabin@serverIP
+```
+
+	- disable root login and password login
+
+	- install ufw firewall and set up following rules
+```
+		sudo apt install ufw
+		sudo ufw default allow outgoing
+		sudo ufw default deny incoming
+		sudo ufw allow 5000
+		sudo ufw allow ssh
+		sudo ufw reload
+		sudo ufw allow 80/tcp
+		sudo ufw allow 443/tcp
+```
+
 2. Docker and Docker Compose installed on your Linode server.
 3. A registered domain name with DNS configured to point to your Linode server's IP address.
 
