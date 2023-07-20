@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your fitness progress</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* CSS code for result.html */
+        .logout-link-result {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #333;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('logout') }}" class="logout-link-result">Logout</a>
+        <div class="result-container">
+            <h1 class="result-heading">You'r doing well 🥳 keep it up!</h1>
+            <img src="data:image/png;base64,{{ graph|safe }}" alt="Progress Graph">
+        </div>
+    </div>
+</body>
+</html>

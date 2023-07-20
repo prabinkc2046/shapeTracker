@@ -1,0 +1,82 @@
+/* CSS for form.html and result.html */
+
+/* Styling for the container element */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Styling for the form box */
+.form-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    max-width: 400px;
+    width: 100%;
+}
+
+/* Styling for the result container */
+.result-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Styling for the result heading */
+.result-heading {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* CSS for logout link */
+.logout-link-form {
+    /* Styles for the logout link in form.html */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+.logout-link-result {
+    /* Styles for the logout link in result.html */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #333;
+    text-decoration: none;
+}
+/* CSS for login.html */
+
+.login-container {
+    /* Styles for the container element */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-form {
+    /* Styles for the login form container */
+    border: 1px solid #ccc;
+    padding: 20px;
+    max-width: 400px;
+    width: 100%;
+}
+
+.form-group {
+    /* Styles for form groups */
+    margin-bottom: 10px;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.red-text {
+    color: red;
+}

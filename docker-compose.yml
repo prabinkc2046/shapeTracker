@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  shapetracker:
+    build:
+      context: ./shapeTracker
+      dockerfile: Dockerfile
+    container_name: shapetracker
+    ports:
+      - 5000:5000
+    depends_on:
+      - shapetracker-mysql
+    networks:
+      - shapetracker-network
+      
+  shapetracker-mysql:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    container_name: shapetracker-mysql
+    networks:
+      - shapetracker-network
+    volumes:
+      - shapetracker-mysql-data:/var/lib/mysql
+    
+  
+
+networks:
+  shapetracker-network:
+volumes:
+  shapetracker-mysql-data:
