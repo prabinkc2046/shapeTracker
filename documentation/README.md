@@ -11,17 +11,28 @@ Before starting the deployment process, make sure you have the following:
 3. A registered domain name with DNS configured to point to your Linode server's IP address.
 
 ### Step 1: Setting up linode server, secure access and firewall considerations
-	1. set up linode virtual machine
+	1. set up linode virtual machine as your requirements
 
-	2. create a new user and make it a member of sudo group
+	2. update and upgrade to the latest version
+```
+		apt update -y && apt upgrade -y
+```
+	3. create a user and add it to the sudo group
+
 ```
 		adduser prabin
+```
+
+```
 		usermod -aG sudo prabin
 ```
 
-	3. set up hostname
+	4. set up hostname
+
 ```
 		hostnamectl set-hostname shapetracker
+```
+```
 		add shapetracker to /etc/hosts 
 ```
 
@@ -32,14 +43,15 @@ Before starting the deployment process, make sure you have the following:
 
 	5. login as new user and update the server
 ```
-		ssh prabin@server_ip
-		sudo apt update -y && sudo apt upgrade -y
+		ssh user@server_IP
 ```
 
 	6. create a ssh-key on the local machine or use existing one and transfer it to the remote server
+
 ```
 		mkdir .ssh @remote server
-		scp path_to_ssh_public_key prabin@remote_server:path_to_.ssh_directory
+```
+```		scp path_to_ssh_public_key prabin@remote_server:path_to_.ssh_directory
 		sudo chmod 700 .ssh/
 		sudo chmod 600 .ssh/*
 ```
