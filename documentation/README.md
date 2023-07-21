@@ -4,13 +4,11 @@ This guide will walk you through the steps to deploy the ShapeTracker applicatio
 
 ## Prerequisites
 
-Before starting the deployment process, make sure you have the following:
-
 1. A Linode server with Ubuntu installed and SSH access configured.
 2. Docker and Docker Compose installed on your Linode server.
 3. A registered domain name with DNS configured to point to your Linode server's IP address.
 
-### Step 1: Setting up linode server, secure access and firewall considerations
+### Step 1: Setting up Linode server, Secure access and Firewall considerations
 
 1. Set up linode virtual machine as your requirements
 
