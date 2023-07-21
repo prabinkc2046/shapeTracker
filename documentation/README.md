@@ -17,7 +17,7 @@ Before starting the deployment process, make sure you have the following:
 2. Update and upgrade to the latest version
 
 ```
-	apt update -y && apt upgrade -y
+apt update -y && apt upgrade -y
 ```
 
 3. Create an user and add it to the sudo group
