@@ -15,7 +15,10 @@ Before starting the deployment process, make sure you have the following:
 
 2. Update and upgrade to the latest version
 
-```apt update -y && apt upgrade -y```
+```
+	apt update -y && apt upgrade -y
+
+```
 
 3. Create an user and add it to the sudo group
 
@@ -44,101 +47,174 @@ Edit /etc/hosts file:
 <IP of your server>	 <hostname>  <---  Add this line
 ```
 
-	4. reboot
-```
-		sudo reboot
-```
-
-	5. login as new user and update the server
-```
-		ssh user@server_IP
-```
-
-	6. create a ssh-key on the local machine or use existing one and transfer it to the remote server
+5. Reboot
 
 ```
-		mkdir .ssh @remote server
-```
-```		scp path_to_ssh_public_key prabin@remote_server:path_to_.ssh_directory
-		sudo chmod 700 .ssh/
-		sudo chmod 600 .ssh/*
+	sudo reboot
+
 ```
 
-	7. login with ssh key
+
+6. Create a ssh-key on the local machine or use existing one and transfer it to the remote server
+
+if you don't have an existing ssh-key pair, create as follow:
+
 ```
-		ssh prabin@serverIP
+	ssh-keygen -t rsa -b 4096
+
 ```
 
-	8. disable root login and password login
+This command will copy your public key to the appropriate location on the remote server, typically under the ~/.ssh/authorized_keys file.
 
-	9. install ufw firewall and set up following rules
 ```
-		sudo apt install ufw
-		sudo ufw default allow outgoing
-		sudo ufw default deny incoming
-		sudo ufw allow 5000
-		sudo ufw allow ssh
-		sudo ufw allow 80/tcp
-		sudo ufw allow 443/tcp
-		suod ufw reload
+
+	ssh-copy-id <user name>@server_IP
+
+```
+
+7. Login without password
+
+if everythong goes well, you should be able to login without password:
+
+```
+	ssh <user name>@serverIP
+
+```
+
+8. Disable root login and password login
+
+Edit /etc/ssh/sshd_config
+
+	Set PermitRootLogin no
+	PasswordAuthentication no
+
+Restart ssh service
+
+```
+	sudo systemctl reload ssh
+
+```
+
+9. Install ufw firewall and set up following rules
+
+Warning!!!
+Ensure you allow ssh access :)
+
+```
+	sudo apt install ufw
+	sudo ufw default allow outgoing
+	sudo ufw default deny incoming
+	sudo ufw allow 5000
+	sudo ufw allow ssh
+	sudo ufw allow 80/tcp
+	sudo ufw allow 443/tcp
+	sudo ufw reload
+```
+
+10. Install Docker and Docker compose
+
+Install Docker Engine on Ubuntu
+
+```
+	curl -fsSL https://get.docker.com -o get-docker.sh
+	sudo sh get-docker.sh
+```
+
+	sudo usermod -aG docker $USER
+
+```
+
+```
+	newgrp docker
+
+```
+
+```
+	sudo curl -L "https://github.com/docker/compose/releases/download/2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+```
+
+```
+	sudo chmod +x /usr/local/bin/docker-compose
+
+```
+
+```
+	sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
 ```
 
 ### Step 2: Clone the Repository
 
 	Clone the ShapeTracker repository to your Linode server using Git.
+
 ```
-	git clone <https://github.com/prabinkc2046/ShapeTrack.git>
+
+	git clone <https://github.com/prabinkc2046/shapeTracker.git>
+
 ```
 
 ### Step 3: Build and Start the Containers
 
-	Use Docker Compose to build and start the application and database containers.
+Use Docker Compose to build and start the application and database containers.
 
 ```
+	
+	cd shapeTracker
+
+```
+
+```
+
 	docker-compose up -d
+
 ```
 	
-	This command will create two containers - one for the ShapeTracker application and another for the MySQL database.
+This command will create two containers - one for the ShapeTracker application and another for the MySQL database.
 
 ### Step 4: Set Up Nginx as Reverse Proxy
 
-	Install Nginx on your Linode server.
+Install Nginx on your Linode server.
 
 ```
-	sudo apt update
+
 	sudo apt install nginx
-```
-
-	Create a new Nginx configuration file for the ShapeTracker application.
 
 ```
+
+Create a new Nginx configuration file for the ShapeTracker application.
+
+```
+	
 	sudo nano /etc/nginx/sites-available/shapetracker
-```
-
-	Add the following Nginx configuration to the file:
 
 ```
-	server {
-    		listen 80;
-    		server_name your_domain_or_server_ip;
 
-    		location / {
-        	proxy_pass http://localhost:5000;
-        	proxy_set_header Host $host;
-        	proxy_set_header X-Real-IP $remote_addr;
-    	}	
-	}
+Add the following Nginx configuration to the file:
+
+```
+server {
+    listen 80;
+    server_name your_domain_or_server_ip;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }	
+}
 
 ```
 
 Replace your_domain_or_server_ip with your domain name or server IP address. in my case, it is "shapetrack.prabinkc.com"
 
-	Enable the Nginx configuration and restart Nginx.
+Enable the Nginx configuration and restart Nginx.
 
 ```
 	sudo ln -s /etc/nginx/sites-available/shapetracker /etc/nginx/sites-enabled/
 	sudo nginx -t
 	sudo systemctl restart nginx
+
 ```
 
 ### Step 6: Obtain SSL/TLS Certificate
