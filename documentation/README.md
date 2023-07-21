@@ -11,35 +11,32 @@ Before starting the deployment process, make sure you have the following:
 3. A registered domain name with DNS configured to point to your Linode server's IP address.
 
 ### Step 1: Setting up linode server, secure access and firewall considerations
+
 1. Set up linode virtual machine as your requirements
 
 2. Update and upgrade to the latest version
 
 ```
 	apt update -y && apt upgrade -y
-
 ```
 
 3. Create an user and add it to the sudo group
 
 ```
 	adduser <user name>
-
 ```
 
 ```
 	usermod -aG sudo <user name>
-
 ```
 
 4. Set up hostname
 
 ```
 	hostnamectl set-hostname <hostname>
-
 ```
 
-Edit /etc/hosts file:
+	Edit /etc/hosts file:
 
 ```
 # /etc/hosts
@@ -212,26 +209,39 @@ Enable the Nginx configuration and restart Nginx.
 
 ```
 	sudo ln -s /etc/nginx/sites-available/shapetracker /etc/nginx/sites-enabled/
+```
+
+```
+
 	sudo nginx -t
+
+```
+```
 	sudo systemctl restart nginx
 
 ```
 
 ### Step 6: Obtain SSL/TLS Certificate
 
-	Install Certbot on your Linode server.
+Install Certbot on your Linode server.
+
 
 ```
-		sudo apt install certbot python3-certbot-nginx
-```
 
-	Obtain a Let's Encrypt SSL/TLS certificate for your domain.
+	sudo apt install certbot python3-certbot-nginx
 
 ```
-		sudo certbot --nginx -d your_domain_or_server_ip
+
+Obtain a Let's Encrypt SSL/TLS certificate for your domain.
+
+
+```
+
+	sudo certbot --nginx -d your_domain
+
 ```
 	
-	Follow the on-screen instructions to complete the certificate installation.
+Follow the on-screen instructions to complete the certificate installation.
 
 ### Step 7: Update DNS Records
 
