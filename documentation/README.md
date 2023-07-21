@@ -4,7 +4,7 @@ This guide will walk you through the steps to deploy the ShapeTracker applicatio
 
 ## Video Demo of Deployment
 
-**Click on the below thumbnail for complete demo video of deployment on Linode**
+Click on the below thumbnail for complete demo video of deployment on Linode
 
 [![Demo video of deployment of shapeTracker app](https://github.com/prabinkc2046/shapeTracker/blob/main/Screenshot/Screenshot%20from%202023-07-21%2013-50-11.png)](https://youtu.be/QfdKDJm3PkY)
 
