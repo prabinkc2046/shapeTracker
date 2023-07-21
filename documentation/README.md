@@ -2,7 +2,7 @@
 
 This guide will walk you through the steps to deploy the ShapeTracker application on a Linode server using Docker Compose, Nginx, and Let's Encrypt SSL/TLS certificates.
 
-[!Demo video of deployment of shapeTracker app](https://youtu.be/QfdKDJm3PkY)
+[![Demo video of deployment of shapeTracker app](https://github.com/prabinkc2046/shapeTracker/blob/main/Screenshot/Screenshot%20from%202023-07-21%2013-50-11.png)](https://youtu.be/QfdKDJm3PkY)
 
 ## Prerequisites
 
