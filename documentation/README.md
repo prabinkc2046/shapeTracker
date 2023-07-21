@@ -51,24 +51,24 @@ sudo reboot
 
 6. Create a ssh-key on the local machine or use existing one and transfer it to the remote server
 
-if you don't have an existing ssh-key pair, create as follow:
+   if you don't have an existing ssh-key pair, create as follow:
 
 ```
-ssh-keygen -t rsa -b 4096
+   ssh-keygen -t rsa -b 4096
 ```
 
-This above command will copy your public key to the appropriate location on the remote server, typically under the ~/.ssh/authorized_keys file.
+   This above command will copy your public key to the appropriate location on the remote server, typically under the ~/.ssh/authorized_keys file.
 
 ```
-ssh-copy-id <user name>@server_IP
+   ssh-copy-id <user name>@server_IP
 ```
 
 7. Login
 
-if everythong goes well, you should be able to login without password:
+   if everythong goes well, you should be able to login without password:
 
 ```
-ssh <user name>@serverIP
+   ssh <user name>@serverIP
 ```
 
 8. Disable root login and password login
@@ -86,7 +86,9 @@ sudo systemctl reload ssh
 9. Install ufw firewall and set up following rules
 
 ***Warning!!!***
+
 Ensure you allow ssh access :)
+
 ```
 sudo apt install ufw
 ```
@@ -114,31 +116,29 @@ sudo ufw reload
 Install Docker Engine on Ubuntu
 
 ```
-	curl -fsSL https://get.docker.com -o get-docker.sh
-	sudo sh get-docker.sh
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+```
+```
+sudo usermod -aG docker $USER
+```
+```
+newgrp docker
 ```
 
-	sudo usermod -aG docker $USER
-
+Installing standalone docker-compose
 ```
-
-```
-	newgrp docker
-
-```
-
-```
-	sudo curl -L "https://github.com/docker/compose/releases/download/2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
 ```
 
 ```
-	sudo chmod +x /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 
 ```
 
 ```
-	sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 ```
 
@@ -157,15 +157,11 @@ Install Docker Engine on Ubuntu
 Use Docker Compose to build and start the application and database containers.
 
 ```
-	
-	cd shapeTracker
-
+cd shapeTracker
 ```
 
 ```
-
-	docker-compose up -d
-
+docker-compose up -d
 ```
 	
 This command will create two containers - one for the ShapeTracker application and another for the MySQL database.
@@ -175,17 +171,14 @@ This command will create two containers - one for the ShapeTracker application a
 Install Nginx on your Linode server.
 
 ```
-
-	sudo apt install nginx
+sudo apt install nginx
 
 ```
 
 Create a new Nginx configuration file for the ShapeTracker application.
 
 ```
-	
-	sudo nano /etc/nginx/sites-available/shapetracker
-
+sudo nano /etc/nginx/sites-available/shapetracker
 ```
 
 Add the following Nginx configuration to the file:
@@ -209,17 +202,14 @@ Replace your_domain_or_server_ip with your domain name or server IP address. in 
 Enable the Nginx configuration and restart Nginx.
 
 ```
-	sudo ln -s /etc/nginx/sites-available/shapetracker /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/shapetracker /etc/nginx/sites-enabled/
 ```
 
 ```
-
-	sudo nginx -t
-
+sudo nginx -t
 ```
 ```
-	sudo systemctl restart nginx
-
+sudo systemctl restart nginx
 ```
 
 ### Step 6: Obtain SSL/TLS Certificate
@@ -228,18 +218,13 @@ Install Certbot on your Linode server.
 
 
 ```
-
-	sudo apt install certbot python3-certbot-nginx
-
+sudo apt install certbot python3-certbot-nginx
 ```
 
 Obtain a Let's Encrypt SSL/TLS certificate for your domain.
 
-
 ```
-
-	sudo certbot --nginx -d your_domain
-
+sudo certbot --nginx -d your_domain
 ```
 	
 Follow the on-screen instructions to complete the certificate installation.
