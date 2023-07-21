@@ -23,89 +23,90 @@ apt update -y && apt upgrade -y
 3. Create an user and add it to the sudo group
 
 ```
-	adduser <user name>
+adduser <user name>
 ```
 
 ```
-	usermod -aG sudo <user name>
+usermod -aG sudo <user name>
 ```
 
 4. Set up hostname
 
 ```
-	hostnamectl set-hostname <hostname>
+hostnamectl set-hostname <hostname>
 ```
 
 	Edit /etc/hosts file:
+	
+	# /etc/hosts
+	127.0.0.1       localhost
+	<IP of your server>	 <hostname>  <---  Add this line
 
-```
-# /etc/hosts
-127.0.0.1       localhost
-<IP of your server>	 <hostname>  <---  Add this line
-```
 
 5. Reboot
 
 ```
-	sudo reboot
-
+sudo reboot
 ```
-
 
 6. Create a ssh-key on the local machine or use existing one and transfer it to the remote server
 
 if you don't have an existing ssh-key pair, create as follow:
 
 ```
-	ssh-keygen -t rsa -b 4096
-
+ssh-keygen -t rsa -b 4096
 ```
 
-This command will copy your public key to the appropriate location on the remote server, typically under the ~/.ssh/authorized_keys file.
+This above command will copy your public key to the appropriate location on the remote server, typically under the ~/.ssh/authorized_keys file.
 
 ```
-
-	ssh-copy-id <user name>@server_IP
-
+ssh-copy-id <user name>@server_IP
 ```
 
-7. Login without password
+7. Login
 
 if everythong goes well, you should be able to login without password:
 
 ```
-	ssh <user name>@serverIP
-
+ssh <user name>@serverIP
 ```
 
 8. Disable root login and password login
 
-Edit /etc/ssh/sshd_config
-
+	Edit /etc/ssh/sshd_config
 	Set PermitRootLogin no
 	PasswordAuthentication no
 
 Restart ssh service
 
 ```
-	sudo systemctl reload ssh
-
+sudo systemctl reload ssh
 ```
 
 9. Install ufw firewall and set up following rules
 
-Warning!!!
+***Warning!!!***
 Ensure you allow ssh access :)
-
 ```
-	sudo apt install ufw
-	sudo ufw default allow outgoing
-	sudo ufw default deny incoming
-	sudo ufw allow 5000
-	sudo ufw allow ssh
-	sudo ufw allow 80/tcp
-	sudo ufw allow 443/tcp
-	sudo ufw reload
+sudo apt install ufw
+```
+```
+sudo ufw default allow outgoing
+```
+```
+sudo ufw default deny incoming
+```
+```
+sudo ufw allow ssh
+```
+```
+sudo ufw allow 80/tcp
+```
+```
+sudo ufw allow 443/tcp
+```
+```
+sudo ufw reload
 ```
 
 10. Install Docker and Docker compose
