@@ -208,10 +208,13 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
+### Step 5: Update DNS Records
+
+	Update your DNS records to point to your Linode server's IP address. Add an A record for shapetracker.your_domain_or_server_ip to your domain's DNS settings.
+
 ### Step 6: Obtain SSL/TLS Certificate
 
 Install Certbot on your Linode server.
-
 
 ```
 sudo apt install certbot python3-certbot-nginx
@@ -225,11 +228,7 @@ sudo certbot --nginx -d your_domain
 	
 Follow the on-screen instructions to complete the certificate installation.
 
-### Step 7: Update DNS Records
-
-	Update your DNS records to point to your Linode server's IP address. Add an A record for shapetracker.your_domain_or_server_ip to your domain's DNS settings.
-
-### Step 8: Access Your Application
+### Step 7: Access Your Application
 
 	Once the DNS changes have propagated, you can access your ShapeTrack application at http://shapetracker.your_domain_or_server_ip. The application will automatically redirect to HTTPS (https://shapetracker.your_domain_or_server_ip) due to the Let's Encrypt SSL/TLS certificate.
 
