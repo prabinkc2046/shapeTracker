@@ -52,13 +52,13 @@ sudo reboot
    if you don't have an existing ssh-key pair, create as follow:
 
 ```
-   ssh-keygen -t rsa -b 4096
+ssh-keygen -t rsa -b 4096
 ```
 
    This above command will copy your public key to the appropriate location on the remote server, typically under the ~/.ssh/authorized_keys file.
 
 ```
-   ssh-copy-id <user name>@server_IP
+ssh-copy-id <user name>@server_IP
 ```
 
 7. Login
@@ -66,7 +66,7 @@ sudo reboot
    if everythong goes well, you should be able to login without password:
 
 ```
-   ssh <user name>@serverIP
+ssh <user name>@serverIP
 ```
 
 8. Disable root login and password login
@@ -106,7 +106,7 @@ sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 ```
 ```
-sudo ufw reload
+sudo ufw enable
 ```
 
 10. Install Docker and Docker compose
@@ -126,7 +126,7 @@ newgrp docker
 
 Installing standalone docker-compose
 ```
-sudo curl -L "https://github.com/docker/compose/releases/download/2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
 ```
 
@@ -145,9 +145,7 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 	Clone the ShapeTracker repository to your Linode server using Git.
 
 ```
-
-	git clone <https://github.com/prabinkc2046/shapeTracker.git>
-
+git clone <https://github.com/prabinkc2046/shapeTracker.git>
 ```
 
 ### Step 3: Build and Start the Containers
