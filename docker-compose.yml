@@ -21,6 +21,7 @@ services:
       - shapetracker-network
     volumes:
       - shapetracker-mysql-data:/var/lib/mysql
+      - ./mysql/custom-my.cnf:/etc/mysql/my.cnf
     
   
 
