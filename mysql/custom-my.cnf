@@ -1,0 +1,4 @@
+[mysqld]
+wait_timeout = 259200
+interactive_timeout = 259200
+max_connections = 100
