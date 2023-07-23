@@ -13,6 +13,7 @@ app = Flask(__name__, static_url_path='/static')
 # Global variables for MySQL connection and cursor
 cnx = None
 cursor = None
+current_user = None
 
 # Connect to the MySQL database
 def connect_to_mysql():
@@ -37,12 +38,14 @@ def wait_for_mysql():
             time.sleep(1)
 
 def sanitize_table_name(username):
-    # Remove special characters from the username and replace them with underscores
+    # Remove special characters and spaces from the username and replace them with underscores
     sanitized_username = re.sub(r'[^a-zA-Z0-9]', '_', username)
     return f"{sanitized_username}_fitness_data"
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    global current_user  # Access the global current_user variable
+
     if request.method == 'POST':
         existing_user = request.form.get('existing_user')
 
@@ -61,8 +64,11 @@ def login():
             row = cursor.fetchone()
 
             if row is not None:
-                return redirect(url_for('index', username=username))
+                current_user = username
+                print(f"User '{username}' logged in successfully!")
+                return redirect(url_for('index'))
             else:
+                print(f"Failed login attempt for user '{username}'. Invalid username or password!")
                 return render_template('login.html', error_message='Invalid username or password!')
 
         else:
@@ -80,6 +86,7 @@ def login():
             row = cursor.fetchone()
 
             if row is not None:
+                print(f"Failed registration attempt for user '{username}'. Username already exists!")
                 return render_template('login.html', error_message='Username already exists!')
 
             # SQL statement to insert data into the user table
@@ -104,15 +111,18 @@ def login():
             # Commit the changes to the database
             cnx.commit()
 
-            return redirect(url_for('index', username=username))
+            current_user = username
+            print(f"User '{username}' registered successfully!")
+            return redirect(url_for('index'))
 
     return render_template('login.html')
 
 @app.route('/form', methods=['GET', 'POST'])
 def index():
-    global cnx, cursor  # Access the global connection and cursor
+    global cnx, cursor, current_user  # Access the global connection, cursor, and current_user variables
 
-    username = request.args.get('username')
+    if current_user is None:
+        return redirect(url_for('login'))
 
     if request.method == 'POST':
         # Get user input from the form
@@ -128,7 +138,7 @@ def index():
         cursor = cnx.cursor()
 
         # Table name for the user's fitness data
-        table_name = sanitize_table_name(username)
+        table_name = sanitize_table_name(current_user)
 
         # SQL statement to insert data into the user's fitness data table
         sql = f"INSERT INTO {table_name} (timestamp, waist_size, weight) VALUES (%s, %s, %s)"
@@ -143,61 +153,91 @@ def index():
         # Ask if the user wants to view their progress
         choice = request.form['progress']
         if choice.lower() == "yes":
-            wait_for_mysql()
-
-            # SQL statement to fetch all entries from the user's fitness data table
-            sql = f"SELECT * FROM {table_name}"
-
-            # Execute the SQL statement
-            cursor.execute(sql)
-
-            # Fetch all the rows
-            rows = cursor.fetchall()
-
-            # Separate the fetched data
-            timestamps = []
-            waist_sizes = []
-            weights = []
-
-            for row in rows:
-                _, timestamp, waist_size, weight = row
-                timestamps.append(str(timestamp))
-                waist_sizes.append(waist_size)
-                weights.append(weight)
-
-            # Plotting the waist size graph
-            plt.subplot(2, 1, 1)
-            plt.bar(timestamps, waist_sizes, color='cyan')
-            plt.xlabel('')
-            plt.ylabel('Waist Size (cm)')
-            plt.title('Waist Size Progress Over Time')
-
-            # Plotting the weight graph
-            plt.subplot(2, 1, 2)
-            plt.bar(timestamps, weights, color='orange')
-            plt.xlabel('')
-            plt.ylabel('Weight (kg)')
-            plt.title('Weight Progress Over Time')
-
-            # Adjust layout
-            plt.tight_layout()
-
-            # Save the graph to a BytesIO object
-            image_stream = BytesIO()
-            plt.savefig(image_stream, format='png')
-            image_stream.seek(0)
-
-            # Encode the image as base64
-            encoded_image = base64.b64encode(image_stream.getvalue()).decode('utf-8')
-
-            return render_template('result.html', graph=encoded_image, username=username)
+            print(f"User '{current_user}' added progress data and wants to view it!")
+            return redirect(url_for('view_progress'))
         else:
+            print(f"User '{current_user}' added progress data and chose not to view it.")
             return "Okay, exiting..."
     else:
-        return render_template('form.html', username=username)
+        return render_template('form.html', username=current_user)
+
+@app.route('/view_progress', methods=['GET'])
+def view_progress():
+    global cnx, cursor, current_user  # Access the global connection, cursor, and current_user variables
+
+    if current_user is None:
+        return redirect(url_for('login'))
+
+    wait_for_mysql()
+
+    # Use the global connection and cursor
+    cursor = cnx.cursor()
+
+    # Table name for the user's fitness data
+    table_name = sanitize_table_name(current_user)
+
+    # SQL statement to fetch all entries from the user's fitness data table
+    sql = f"SELECT * FROM {table_name}"
+
+    # Execute the SQL statement
+    cursor.execute(sql)
+
+    # Fetch all the rows
+    rows = cursor.fetchall()
+
+    # Check if the user has any progress data
+    if not rows:
+        print(f"User '{current_user}' does not have any progress data.")
+        return "No progress data available."
+
+    # Separate the fetched data
+    timestamps = []
+    waist_sizes = []
+    weights = []
+
+    for row in rows:
+        _, timestamp, waist_size, weight = row
+        timestamps.append(str(timestamp))
+        waist_sizes.append(waist_size)
+        weights.append(weight)
+
+    # Plotting the waist size graph
+    plt.subplot(2, 1, 1)
+    plt.bar(timestamps, waist_sizes, color='cyan')
+    plt.xlabel('')
+    plt.ylabel('Waist Size (cm)')
+    plt.title('Waist Size Progress Over Time')
+
+    # Plotting the weight graph
+    plt.subplot(2, 1, 2)
+    plt.bar(timestamps, weights, color='orange')
+    plt.xlabel('')
+    plt.ylabel('Weight (kg)')
+    plt.title('Weight Progress Over Time')
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Save the graph to a BytesIO object
+    image_stream = BytesIO()
+    plt.savefig(image_stream, format='png')
+    image_stream.seek(0)
+
+    # Encode the image as base64
+    encoded_image = base64.b64encode(image_stream.getvalue()).decode('utf-8')
+
+    # Clear the current figure to avoid overlapping plots
+    plt.clf()
+
+    return render_template('view_progress.html', graph=encoded_image, username=current_user)
+
+
 
 @app.route('/logout', methods=['GET'])
 def logout():
+    global current_user  # Access the global current_user variable
+    current_user = None
+    print("User logged out.")
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
