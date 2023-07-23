@@ -192,12 +192,14 @@ def view_progress():
 
     # Separate the fetched data
     timestamps = []
+    print("Time Stamps:", timestamps)
     waist_sizes = []
     weights = []
 
     for row in rows:
         _, timestamp, waist_size, weight = row
         timestamps.append(str(timestamp))
+        print("after appended:", timestamps)
         waist_sizes.append(waist_size)
         weights.append(weight)
 
